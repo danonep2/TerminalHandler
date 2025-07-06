@@ -2,20 +2,22 @@ import { useRouter } from 'next/router';
 import { useAppContext } from '../context/app.context';
 import { Rnd } from 'react-rnd';
 import { CommandInterface } from '../@types/command';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import {
   AiOutlineArrowLeft,
   AiOutlinePlus
 } from "react-icons/ai";
 import CommandItemList from '../components/CommandItemList';
+import Modal from '../components/Modal';
+import CommandForm from '../components/CommandForm';
 
 const DetailsPage = () => {
   const router = useRouter()
   const { scopeSelected, setScopeSelected } = useAppContext();
 
   const [commandSelected, setCommandSelected] = useState<CommandInterface>();
-
-  const saidaRef = useRef<HTMLDivElement>(null);
+  const [autoScroll, setAutoScroll] = useState(true);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
 
   const back = () => {
     setScopeSelected(undefined);
@@ -63,6 +65,7 @@ const DetailsPage = () => {
               >Comandos cadastrados</h1>
               <button
                 className='btn-blue flex items-center gap-2 w-100'
+                onClick={() => setModalIsOpen(true)}
               >
                 <AiOutlinePlus />
                 Adicionar Comando
@@ -88,14 +91,25 @@ const DetailsPage = () => {
           [&::-webkit-scrollbar-track]:opacity-0
           [&::-webkit-scrollbar-thumb]:bg-gray-300
           [&::-webkit-scrollbar-thumb]:rounded-md
-          bg-gray-950 w-full h-full max-h-[80vh] overflow-auto relative rounded-lg text-white p-4"
+          bg-gray-950 w-full h-full max-h-[80vh] overflow-auto relative rounded-lg text-white p-4
+          "
         >
-          <pre>
+          <pre
+            className="text-wrap"
+          >
             {commandSelected?.output || ""}
           </pre>
         </div>
       </div>
 
+      <Modal
+        isOpen={modalIsOpen}
+        setIsOpen={setModalIsOpen}
+        >
+        <CommandForm
+          closeModal={() => setModalIsOpen(false)}
+        />
+      </Modal>
     </div>
   )
 }

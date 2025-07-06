@@ -21,8 +21,11 @@ contextBridge.exposeInMainWorld('api', {
   iniciarComandoWatch: (json) => ipcRenderer.send('comando-watch-iniciar', json),
   pararComandoWatch: (json) => ipcRenderer.send('comando-watch-parar', json),
   onSaida: (callback) => ipcRenderer.on('comando-watch-saida', (_, data) => callback(data)),
-  onFim: (callback) => ipcRenderer.on('comando-watch-fim', (_, msg) => callback(msg)),
-  resetAllHandles: () => ipcRenderer.send('reset-all-handles')
+  onFim: (callback) => ipcRenderer.on('comando-watch-fim', (_, data) => callback(data)),
+  resetAllHandles: () => ipcRenderer.send('reset-all-handles'),
+  selecionarPasta: () => ipcRenderer.invoke('selecionar-pasta'),
+  saveData: (data) => ipcRenderer.send('save-data', data),
+  getData: () => ipcRenderer.invoke('get-data'),
 });
 
 export type IpcHandler = typeof handler

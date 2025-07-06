@@ -20,19 +20,31 @@ Gerenciador de execução de comandos no sistema. O projeto permite que o usuár
 
 O sistema funciona em modo watch então comando que executando continuamento como `yarn dev` ou `ping google.com -t` continuaram mostrando suas saidas enquanto executam.
 
+Caso tenha interesse em utilizar o software, me comunique 😊
+
+Gostaria muito de saber que alguem se interessou pelo projeto.
+
+Caso tenho alguma sugestão pode me informar também
+
 ### Funções implementadas:
 1. Definir um escopo especificando a pasta onde serão executado os comandos
-2. Definir quais comandos iram executar nas pastas
-3. Exibir saidas dos comandos no app (sem as cores)
-4. Executar diferentes comando em paralelo
+2. Adicionar novos escopos
+3. Adicionar novos Comandos
+3. Definir quais comandos iram executar nos escopos
+4. Exibir saidas dos comandos no app (sem as cores)
+5. Executar diferentes comando em paralelo
+6. Salva as saidas dos comandos separadamente
+7. Executa comandos continuos e exibe as saidas em tempo real
+6. Informações salvas localmento no computador (appdata)
 
 ### Funções que serão implementadas:
-1. Formulario de Adicionar comandos e Escopos
-2. Adicionar função de incluir argumentos personalizados nos comandos
-3. Limpar saida
-4. Reiniciar processo
+1. Adicionar função de incluir argumentos personalizados nos comandos
+2. Limpar saida
+3. Reiniciar processo
+4. Editar/Remover Comandos e escopos
 
-OBS: No momento, os valores estão definidos com moks
+- OBS: Moks removidos!
+- Path dos dados: `C:\Users\{user}\AppData\Roaming\TermialHandler`
 
 # Screenshots 📸
 <div display="inline" align="center">

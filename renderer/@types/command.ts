@@ -5,9 +5,8 @@ export interface CommandInterface {
   name: string;
   description: string;
   isRunning: boolean;
-  command: string;
+  run: string;
   output: string;
-  handdle?: any;
   needAdmin?: boolean;
   arguments?: ArgumentsInterface[];
 }

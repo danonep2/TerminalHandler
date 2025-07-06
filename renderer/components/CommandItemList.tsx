@@ -27,7 +27,8 @@ const CommandItemList = ({ command, selectCommand, isSelected }: CommandItemList
     const data = {
       id_scope: scopeSelected?.id,
       id_command: command.id_command,
-      command: command.command,
+      command: command.run,
+      directory: scopeSelected?.directory
     }
 
     // @ts-ignore
@@ -38,8 +39,6 @@ const CommandItemList = ({ command, selectCommand, isSelected }: CommandItemList
 
   const stop = (event) => {
     event.stopPropagation();
-    // updateIsRunning(scopeSelected?.id, command.id_command, false);
-
     const data = {
       id_scope: scopeSelected?.id,
       id_command: command.id_command,

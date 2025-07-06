@@ -1,10 +1,13 @@
-import React from 'react'
+import React, { useState } from 'react'
 import HomeCard from '../components/HomeCard'
 import { useAppContext } from '../context/app.context'
-
+import { AiOutlinePlus } from 'react-icons/ai';
+import Modal from '../components/Modal';
+import ScopoForm from '../components/ScopoForm';
 
 export default function HomePage() {
   const { scopeList } = useAppContext();
+  const [modalIsOpen, setModalIsOpen] = useState(false);
 
   return (
     <div
@@ -19,9 +22,24 @@ export default function HomePage() {
         }
       </div>
 
-      <button>
-
+      <button
+        className='btn-blue flex items-center gap-2 absolute right-2 top-4'
+        onClick={() => setModalIsOpen(true)}
+      >
+        <AiOutlinePlus />
+        Adicionar Escopo
       </button>
+
+      <Modal
+        isOpen={modalIsOpen}
+        setIsOpen={setModalIsOpen}
+        onClose={() => {}}
+      >
+        <ScopoForm
+          scope={undefined}
+          closeModal={() => setModalIsOpen(false)}
+        />
+      </Modal>
     </div>
   )
 }

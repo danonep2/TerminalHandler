@@ -1,9 +1,10 @@
 import path from 'path'
-import { app, BrowserWindow, ipcMain } from 'electron'
+import { app, BrowserWindow, dialog, ipcMain } from 'electron'
 import serve from 'electron-serve'
 import { createWindow } from './helpers'
 import { spawn } from 'child_process'
 import { CommandBackground } from '../renderer/@types/command-background'
+import fs from 'fs';
 
 const isProd = process.env.NODE_ENV === 'production'
 
@@ -46,12 +47,13 @@ const hadles: CommandBackground[] = [];
 ipcMain.on('comando-watch-iniciar', (event, json: string) => {
   const data = JSON.parse(json);
 
-  const { id_scope, id_command, command } = data;
+  let { id_scope, id_command, command, directory } = data;
+  let disk = directory.substr(1,1)
 
   const janela = BrowserWindow.getFocusedWindow();
   if (!janela) return;
 
-  const processoWatch = spawn(command, [], {
+  const processoWatch = spawn(`${disk}: && cd ${directory} && ${command}`, [], {
     shell: true,
     env: process.env,
   });
@@ -75,15 +77,22 @@ ipcMain.on('comando-watch-iniciar', (event, json: string) => {
   });
 
   processoWatch.on('close', (code) => {
-    janela.webContents.send('comando-watch-fim', `{"id_scope": ${id_scope}, "code": ${code}}`);
+    const result = {
+      result: code,
+      id_command,
+      id_scope
+    }
 
     // remover da lista
     const index = hadles.findIndex(
       item => item.id_scope === +id_scope && item.id_command === +id_command
     );
+
     if (index !== -1) {
       hadles.splice(index, 1);
     }
+
+    janela.webContents.send('comando-watch-fim', JSON.stringify(result));
   });
 
   hadles.push({
@@ -101,7 +110,6 @@ ipcMain.on('comando-watch-parar', (event, json) => {
   );
 
   if (handle) {
-    console.log(handle);
     handle.handdle.kill();
   }
 });
@@ -110,4 +118,27 @@ ipcMain.on('reset-all-handles', () => {
   hadles.forEach(item => {
     item.handdle.kill();
   });
+});
+
+ipcMain.handle('selecionar-pasta', async () => {
+  const resultado = await dialog.showOpenDialog({
+    properties: ['openDirectory'],
+  });
+
+  return resultado.canceled ? null : resultado.filePaths[0];
+});
+
+const pathDir = path.join(app.getPath('appData'), 'TermialHandler');
+const dataPath = path.join(pathDir, 'data.json');
+
+if (!fs.existsSync(pathDir)){
+  fs.mkdir(pathDir, () => {});
+}
+
+ipcMain.on('save-data', (event, data) => {
+  fs.writeFileSync(dataPath, data);
+});
+
+ipcMain.handle('get-data', () => {
+  return fs.readFileSync(dataPath, 'utf-8');
 });
