@@ -1,0 +1,2 @@
+# TerminalHandler
+Gerenciador de comandos
