@@ -4,10 +4,12 @@ import { useAppContext } from '../context/app.context'
 import { AiOutlinePlus } from 'react-icons/ai';
 import Modal from '../components/Modal';
 import ScopoForm from '../components/ScopoForm';
+import { ScopeInterface } from '../@types/scope';
 
 export default function HomePage() {
   const { scopeList } = useAppContext();
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [scopeToEdit, setScopeToEdit] = useState<ScopeInterface>();
 
   return (
     <div
@@ -17,7 +19,15 @@ export default function HomePage() {
 
       <div className='w-screen p-10 flex flex-wrap m-10 mt-2 gap-4 self-center'>
         {scopeList && scopeList?.map((scope) => (
-          <HomeCard key={scope.id} scope={scope} />
+          <HomeCard
+            key={scope.id}
+            scope={scope}
+            openToEdit={(scope) => {
+              console.log(scope);
+              setScopeToEdit(scope);
+              setModalIsOpen(true);
+            }}
+          />
         ))
         }
       </div>
@@ -33,11 +43,14 @@ export default function HomePage() {
       <Modal
         isOpen={modalIsOpen}
         setIsOpen={setModalIsOpen}
-        onClose={() => {}}
+        onClose={() => setScopeToEdit(undefined)}
       >
         <ScopoForm
-          scope={undefined}
-          closeModal={() => setModalIsOpen(false)}
+          scope={scopeToEdit}
+          closeModal={() => {
+            setScopeToEdit(undefined);
+            setModalIsOpen(false);
+          }}
         />
       </Modal>
     </div>

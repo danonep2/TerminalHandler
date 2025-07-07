@@ -8,18 +8,34 @@ interface CommandFormProps {
   closeModal: () => void
 }
 const CommandForm = ({ command, closeModal }: CommandFormProps) => {
-  const { scopeSelected, addCommand } = useAppContext();
+  const {
+    scopeSelected,
+    addCommand,
+    editCommand,
+    removeCommand
+  } = useAppContext();
 
-  const [name, setName] = useState('');
-  const [run, setRun] = useState('');
-  const [description, setDescription] = useState('');
+  const [name, setName] = useState(command?.name || '');
+  const [run, setRun] = useState(command?.run || '');
+  const [description, setDescription] = useState(command?.description || '');
 
+  console.log(command)
 
   const handleSubmit = () => {
     if(!name || !run) {
       return;
     }
 
+    if(command){
+      _editCommand();
+    } else {
+      newCommand();
+    }
+
+    closeModal();
+  }
+
+  const newCommand = () => {
     const id = (scopeSelected?.commands.length + 1) || 1;
 
     const _command: CommandInterface = {
@@ -32,6 +48,21 @@ const CommandForm = ({ command, closeModal }: CommandFormProps) => {
     }
 
     addCommand(_command);
+  }
+
+  const _editCommand = () => {
+    command.name = name;
+    command.description = description;
+    command.run = run;
+
+    editCommand(command, scopeSelected);
+  }
+
+  const handleDelete = () => {
+    if(command) {
+      removeCommand(command, scopeSelected);
+    }
+
     closeModal();
   }
 
@@ -40,7 +71,7 @@ const CommandForm = ({ command, closeModal }: CommandFormProps) => {
       <h1
         className='text-2xl font-bold mb-2 text-center'
       >
-        Adicionar Comando
+        {command ? 'Editar Comando' : 'Adicionar Comando'}
       </h1>
 
       <Input
@@ -54,7 +85,7 @@ const CommandForm = ({ command, closeModal }: CommandFormProps) => {
         value={run}
         onChange={(value) => setRun(value)}
         label="Comando"
-        placeholder="Ex: yarn dev"
+        placeholder="Ex: yarn upgrade"
       />
 
       <Input
@@ -68,8 +99,16 @@ const CommandForm = ({ command, closeModal }: CommandFormProps) => {
         className='btn-blue w-full my-2'
         onClick={() => handleSubmit()}
       >
-        Salvar
+        {command ? 'Salvar' : 'Adicionar'}
       </button>
+      {command &&
+        <button
+          className='btn-blue bg-[#f44336] text-white w-full'
+          onClick={() => handleDelete()}
+        >
+          Excluir
+        </button>
+      }
     </div>
   )
 }

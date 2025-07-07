@@ -2,22 +2,22 @@ import { useEffect } from "react";
 import { CommandInterface } from "../@types/command";
 import {
   AiOutlineCaretRight,
-  AiFillEdit,
 } from "react-icons/ai";
 
 import {
   AiOutlineBorder
 } from "react-icons/ai";
 import { useAppContext } from "../context/app.context";
-
+import { MdModeEdit } from "react-icons/md";
 
 interface CommandItemListProps {
   command: CommandInterface;
   selectCommand: () => void;
+  editCommand: (command: CommandInterface) => void;
   isSelected: boolean;
 }
 
-const CommandItemList = ({ command, selectCommand, isSelected }: CommandItemListProps) => {
+const CommandItemList = ({ command, selectCommand, isSelected, editCommand }: CommandItemListProps) => {
   const { scopeSelected, updateIsRunning } = useAppContext();
 
   const start = (event) => {
@@ -67,10 +67,14 @@ const CommandItemList = ({ command, selectCommand, isSelected }: CommandItemList
       <div
         className="flex items-center gap-2"
       >
-        <AiFillEdit color="#060"/>
+        <MdModeEdit
+          color="#060"
+          className={`hover:bg-gray-200 rounded-full transition-all ease-in-out duration-300 ${command.isRunning && "cursor-not-allowed"}`}
+          onClick={() => !command.isRunning && editCommand(command)}
+        />
         {command.isRunning
-          ? <AiOutlineBorder onClick={stop} color="#F00"/>
-          : <AiOutlineCaretRight onClick={start} color="#00F"/>
+          ? <AiOutlineBorder onClick={stop} color="#F00" className="hover:bg-gray-200 rounded-full transition-all ease-in-out duration-300"/>
+          : <AiOutlineCaretRight onClick={start} color="#00F" className="hover:bg-gray-200 rounded-full transition-all ease-in-out duration-300"/>
         }
       </div>
     </div>

@@ -9,9 +9,13 @@ type AppContextType = {
   scopeList: ScopeInterface[];
   updateIsRunning: (
     id_scope: number, id_command: number, isRunning: boolean
-  ) => void
-  addEscope: (scope: ScopeInterface) => void
-  addCommand: (command: CommandInterface) => void
+  ) => void;
+  addEscope: (scope: ScopeInterface) => void;
+  editEscope: (scope: ScopeInterface) => void;
+  removeScope: (scope: ScopeInterface) => void;
+  addCommand: (command: CommandInterface) => void;
+  editCommand: (command: CommandInterface, scope: ScopeInterface) => void;
+  removeCommand : (command: CommandInterface, scope: ScopeInterface) => void
 };
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -104,8 +108,44 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     setScopeList([...scopeList || [], scope]);
   }
 
+  const editEscope = (scope: ScopeInterface) => {
+    const result = scopeList?.map((item) => {
+      if(item.id === scope.id) {
+        return scope;
+      }
+
+      return item;
+    });
+
+    setScopeList(result);
+  }
+
+  const removeScope = (scope: ScopeInterface) => {
+    const result = scopeList?.filter((item) => item.id !== scope.id);
+    setScopeList(result);
+  }
+
   const addCommand = ( command: CommandInterface) => {
     scopeSelected.commands.push(command);
+    setScopeList([...scopeList]);
+  }
+
+  const editCommand = (command: CommandInterface, scope: ScopeInterface) => {
+    const result = scope.commands.map((item) => {
+      if(item.id_command === command.id_command) {
+        return command;
+      }
+
+      return item;
+    });
+
+    scope.commands = result;
+    setScopeList([...scopeList]);
+  }
+
+  const removeCommand = (command: CommandInterface, scope: ScopeInterface) => {
+    const result = scope.commands.filter((item) => item.id_command !== command.id_command);
+    scope.commands = result;
     setScopeList([...scopeList]);
   }
 
@@ -115,7 +155,11 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     scopeList,
     updateIsRunning,
     addEscope,
-    addCommand
+    addCommand,
+    editEscope,
+    removeScope,
+    editCommand,
+    removeCommand,
   }
 
 

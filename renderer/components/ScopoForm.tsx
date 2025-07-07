@@ -10,15 +10,24 @@ interface ScopoFormProps {
 }
 
 const ScopoForm = ({ scope, closeModal }: ScopoFormProps) => {
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const [directory, setDirectory] = useState('');
+  const [name, setName] = useState(scope?.name || '');
+  const [description, setDescription] = useState(scope?.description || '');
+  const [directory, setDirectory] = useState(scope?.directory || '');
 
-  const { addEscope, scopeList } = useAppContext();
+  const {
+    removeScope,
+    addEscope,
+    scopeList,
+    editEscope
+  } = useAppContext();
 
   const getDirectory = async () => {
     // @ts-ignore
     const _directory = await window.api.selecionarPasta();
+
+    if(!_directory) {
+      return;
+    }
 
     setDirectory(`"${_directory}"`);
   }
@@ -28,8 +37,18 @@ const ScopoForm = ({ scope, closeModal }: ScopoFormProps) => {
       return;
     }
 
+    if(scope){
+      _editScope();
+    } else {
+      newScope();
+    }
+
+    closeModal();
+  }
+
+  const newScope = () => {
     const id = (scopeList?.length + 1) || 1;
-    const scope: ScopeInterface = {
+    const newScope: ScopeInterface = {
       id,
       name,
       description,
@@ -37,7 +56,22 @@ const ScopoForm = ({ scope, closeModal }: ScopoFormProps) => {
       commands: []
     }
 
-    addEscope(scope);
+    addEscope(newScope);
+  }
+
+  const _editScope = () => {
+    scope.name = name;
+    scope.description = description;
+    scope.directory = directory;
+
+    editEscope(scope);
+  }
+
+  const handleDelete = () => {
+    if (scope) {
+      removeScope(scope);
+    }
+
     closeModal();
   }
 
@@ -46,7 +80,8 @@ const ScopoForm = ({ scope, closeModal }: ScopoFormProps) => {
       <h1
         className='text-2xl font-bold mb-2 text-center'
       >
-        Adicionar Novo Escopo
+        {
+          scope ? 'Editar Escopo' : 'Adicionar Novo Escopo'}
       </h1>
       <Input
         label="Nome do Escopo"
@@ -74,8 +109,16 @@ const ScopoForm = ({ scope, closeModal }: ScopoFormProps) => {
         className='btn-blue w-full my-2'
         onClick={() => handleSubmit()}
       >
-        Salvar
+        {scope ? 'Salvar' : 'Adicionar'}
       </button>
+      {scope &&
+        <button
+          className='btn-blue bg-[#f44336] text-white w-full'
+          onClick={() => handleDelete()}
+        >
+          Excluir
+        </button>
+      }
     </div>
   )
 }

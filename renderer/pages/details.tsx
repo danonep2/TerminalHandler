@@ -18,10 +18,16 @@ const DetailsPage = () => {
   const [commandSelected, setCommandSelected] = useState<CommandInterface>();
   const [autoScroll, setAutoScroll] = useState(true);
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [commandToEdit, setCommandToEdit] = useState<CommandInterface>();
 
   const back = () => {
     setScopeSelected(undefined);
     router.back();
+  }
+
+  const openToEdit = (command: CommandInterface) => {
+    setCommandToEdit(command);
+    setModalIsOpen(true);
   }
 
   return (
@@ -75,6 +81,7 @@ const DetailsPage = () => {
             {scopeSelected?.commands?.map((command) => (
               <CommandItemList
                 key={command.id_command}
+                editCommand={openToEdit}
                 command={command}
                 selectCommand={() => setCommandSelected(command)}
                 isSelected={command.id_command === commandSelected?.id_command}
@@ -105,9 +112,15 @@ const DetailsPage = () => {
       <Modal
         isOpen={modalIsOpen}
         setIsOpen={setModalIsOpen}
+        onClose={() => setCommandToEdit(undefined)}
         >
         <CommandForm
-          closeModal={() => setModalIsOpen(false)}
+          command={commandToEdit}
+          closeModal={() => {
+            setModalIsOpen(false)
+            setCommandToEdit(undefined)
+            setCommandSelected(undefined)
+          }}
         />
       </Modal>
     </div>

@@ -1,14 +1,19 @@
 import { useRouter } from 'next/router';
 import { useAppContext } from '../context/app.context';
 import { ScopeInterface } from '../@types/scope';
+import { MdModeEdit } from "react-icons/md";
+import { useState } from 'react';
 
 interface HomeCardProps {
-  scope: ScopeInterface
+  scope: ScopeInterface;
+  openToEdit: (scope: ScopeInterface) => void
 }
 
-const HomeCard = ({ scope }: HomeCardProps) => {
+const HomeCard = ({ scope, openToEdit }: HomeCardProps) => {
   const router = useRouter();
   const { setScopeSelected } = useAppContext();
+
+  const [scopeToEdit, setScopeToEdit] = useState<ScopeInterface>();
 
   const handleClick = () => {
     setScopeSelected(scope);
@@ -26,11 +31,21 @@ const HomeCard = ({ scope }: HomeCardProps) => {
     }, 0);
   }
 
+  const edit = (event) => {
+    event.stopPropagation();
+    openToEdit(scope);
+  }
+
   return (
     <div
-      className='w-[300px] h-[150px] rounded-md bg-white p-4 shadow-lg cursor-pointer hover:scale-105 transition-all ease-in-out duration-300 flex flex-col'
+      className='w-[300px] h-[150px] rounded-md bg-white p-4 shadow-lg cursor-pointer hover:scale-105 transition-all ease-in-out duration-300 flex flex-col relative'
       onClick={handleClick}
     >
+      <MdModeEdit
+        size={24}
+        className="hover:bg-gray-200 rounded-full transition-all ease-in-out duration-300 absolute right-2 top-3 cursor-pointer"
+        onClick={edit}
+      />
       <h2
         className="font-bold text-lg"
       >{scope.name}</h2>
