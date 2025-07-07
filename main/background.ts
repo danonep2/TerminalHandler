@@ -2,7 +2,7 @@ import path from 'path'
 import { app, BrowserWindow, dialog, ipcMain } from 'electron'
 import serve from 'electron-serve'
 import { createWindow } from './helpers'
-import { spawn } from 'child_process'
+import { exec, spawn } from 'child_process'
 import { CommandBackground } from '../renderer/@types/command-background'
 import fs from 'fs';
 
@@ -109,8 +109,8 @@ ipcMain.on('comando-watch-parar', (event, json) => {
     item => item.id_scope === +id_scope && item.id_command === +id_command
   );
 
-  if (handle) {
-    handle.handdle.kill();
+  if (handle.handdle && handle.handdle.pid) {
+    exec(`taskkill /pid ${handle.handdle.pid} /T /F`);
   }
 });
 

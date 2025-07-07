@@ -30,18 +30,19 @@ Caso tenho alguma sugestão pode me informar também
 1. Definir um escopo especificando a pasta onde serão executado os comandos
 2. Adicionar novos escopos
 3. Adicionar novos Comandos
-3. Definir quais comandos iram executar nos escopos
-4. Exibir saidas dos comandos no app (sem as cores)
-5. Executar diferentes comando em paralelo
-6. Salva as saidas dos comandos separadamente
-7. Executa comandos continuos e exibe as saidas em tempo real
-6. Informações salvas localmento no computador (appdata)
+4. Editar/Remover Comandos e escopos
+5. Definir quais comandos iram executar nos escopos
+6. Exibir saidas dos comandos no app (sem as cores)
+7. Executar diferentes comando em paralelo
+8. Interromper processos
+9. Salva as saidas dos comandos separadamente
+10. Executa comandos continuos e exibe as saidas em tempo real
+11. Informações salvas localmento no computador (appdata)
 
 ### Funções que serão implementadas:
 1. Adicionar função de incluir argumentos personalizados nos comandos
 2. Limpar saida
 3. Reiniciar processo
-4. Editar/Remover Comandos e escopos
 
 - OBS: Moks removidos!
 - Path dos dados: `C:\Users\{user}\AppData\Roaming\TermialHandler`
