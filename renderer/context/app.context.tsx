@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, ReactNode, useEffect, useRef } from 'react';
+import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { ScopeInterface } from '../@types/scope';
 import { CommandInterface } from '../@types/command';
 import * as _ from 'lodash';
@@ -15,7 +15,10 @@ type AppContextType = {
   removeScope: (scope: ScopeInterface) => void;
   addCommand: (command: CommandInterface) => void;
   editCommand: (command: CommandInterface, scope: ScopeInterface) => void;
-  removeCommand : (command: CommandInterface, scope: ScopeInterface) => void
+  removeCommand : (command: CommandInterface, scope: ScopeInterface) => void;
+  cleanOutput: (command: CommandInterface) => void;
+  openInTerminal: () => void;
+  restartProcess: (command: CommandInterface) => void;
 };
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -36,7 +39,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
       return;
     }
 
-    command.output = command.output + result;
+    command.output = command.output === '' ? result : command.output + result;
     setScopeList([...scopeList]);
   },[updateOutData]);
 
@@ -46,19 +49,16 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
   }, [updateIsRunningObj]);
 
   useEffect(() => {
-    // @ts-ignore
     window.api.onSaida((event) => {
       const data = JSON.parse(event);
 
       setUpdateOutData(data);
     });
 
-    // @ts-ignore
     window.api.onFim((msg) => {
       setUpdateIsRunningObj(JSON.parse(msg));
     });
 
-    // @ts-ignore
     window.api.resetAllHandles();
 
     const getData = async () => {
@@ -66,7 +66,6 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
         return
       }
 
-      // @ts-ignore
       const data = await window.api.getData();
       setScopeList(JSON.parse(data) || []);
     }
@@ -88,7 +87,6 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
       })
     })
 
-    // @ts-ignore
     window.api.saveData(JSON.stringify(scopeListClone));
   }, [scopeList]);
 
@@ -149,6 +147,16 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     setScopeList([...scopeList]);
   }
 
+  const openInTerminal = () => {
+    window.api.openInTerminal(scopeSelected?.directory);
+  }
+
+  const cleanOutput = (command: CommandInterface) => {
+    command.output = '';
+    setScopeList([...scopeList]);
+  }
+
+
   const contextValue = {
     scopeSelected,
     setScopeSelected,
@@ -160,6 +168,8 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     removeScope,
     editCommand,
     removeCommand,
+    openInTerminal,
+    cleanOutput,
   }
 
 

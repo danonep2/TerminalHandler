@@ -31,7 +31,6 @@ const CommandItemList = ({ command, selectCommand, isSelected, editCommand }: Co
       directory: scopeSelected?.directory
     }
 
-    // @ts-ignore
     window.api.iniciarComandoWatch(JSON.stringify(data));
 
     selectCommand();
@@ -44,7 +43,6 @@ const CommandItemList = ({ command, selectCommand, isSelected, editCommand }: Co
       id_command: command.id_command,
     }
 
-    // @ts-ignore
     window.api.pararComandoWatch(JSON.stringify(data));
   };
 

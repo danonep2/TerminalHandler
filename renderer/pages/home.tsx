@@ -3,7 +3,7 @@ import HomeCard from '../components/HomeCard'
 import { useAppContext } from '../context/app.context'
 import { AiOutlinePlus } from 'react-icons/ai';
 import Modal from '../components/Modal';
-import ScopoForm from '../components/ScopoForm';
+import ScopeForm from '../components/ScopeForm';
 import { ScopeInterface } from '../@types/scope';
 
 export default function HomePage() {
@@ -23,7 +23,6 @@ export default function HomePage() {
             key={scope.id}
             scope={scope}
             openToEdit={(scope) => {
-              console.log(scope);
               setScopeToEdit(scope);
               setModalIsOpen(true);
             }}
@@ -45,7 +44,7 @@ export default function HomePage() {
         setIsOpen={setModalIsOpen}
         onClose={() => setScopeToEdit(undefined)}
       >
-        <ScopoForm
+        <ScopeForm
           scope={scopeToEdit}
           closeModal={() => {
             setScopeToEdit(undefined);

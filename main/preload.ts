@@ -17,7 +17,7 @@ const handler = {
 
 contextBridge.exposeInMainWorld('ipc', handler)
 
-contextBridge.exposeInMainWorld('api', {
+const rendererApi = {
   iniciarComandoWatch: (json) => ipcRenderer.send('comando-watch-iniciar', json),
   pararComandoWatch: (json) => ipcRenderer.send('comando-watch-parar', json),
   onSaida: (callback) => ipcRenderer.on('comando-watch-saida', (_, data) => callback(data)),
@@ -26,6 +26,10 @@ contextBridge.exposeInMainWorld('api', {
   selecionarPasta: () => ipcRenderer.invoke('selecionar-pasta'),
   saveData: (data) => ipcRenderer.send('save-data', data),
   getData: () => ipcRenderer.invoke('get-data'),
-});
+  openInTerminal: (directory) => ipcRenderer.send('open-in-terminal', directory),
+}
+
+contextBridge.exposeInMainWorld('api', rendererApi);
 
 export type IpcHandler = typeof handler
+export type RendererApi = typeof rendererApi

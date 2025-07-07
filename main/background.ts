@@ -142,3 +142,12 @@ ipcMain.on('save-data', (event, data) => {
 ipcMain.handle('get-data', () => {
   return fs.readFileSync(dataPath, 'utf-8');
 });
+
+ipcMain.on('open-in-termial', (event, directory) => {
+  let disk = directory.substr(1,1)
+
+  spawn(`${disk}: && cd ${directory} && start cmd`, [], {
+    shell: true,
+    env: process.env,
+  });
+})

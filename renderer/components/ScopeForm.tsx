@@ -9,7 +9,7 @@ interface ScopoFormProps {
   closeModal: () => void
 }
 
-const ScopoForm = ({ scope, closeModal }: ScopoFormProps) => {
+const ScopeForm = ({ scope, closeModal }: ScopoFormProps) => {
   const [name, setName] = useState(scope?.name || '');
   const [description, setDescription] = useState(scope?.description || '');
   const [directory, setDirectory] = useState(scope?.directory || '');
@@ -22,7 +22,6 @@ const ScopoForm = ({ scope, closeModal }: ScopoFormProps) => {
   } = useAppContext();
 
   const getDirectory = async () => {
-    // @ts-ignore
     const _directory = await window.api.selecionarPasta();
 
     if(!_directory) {
@@ -52,7 +51,10 @@ const ScopoForm = ({ scope, closeModal }: ScopoFormProps) => {
       id,
       name,
       description,
-      directory,
+      directory:
+        directory.includes('"')
+        ? directory
+        : `"${directory}"`,
       commands: []
     }
 
@@ -123,4 +125,4 @@ const ScopoForm = ({ scope, closeModal }: ScopoFormProps) => {
   )
 }
 
-export default ScopoForm
+export default ScopeForm

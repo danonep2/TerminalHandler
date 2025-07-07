@@ -19,8 +19,6 @@ const CommandForm = ({ command, closeModal }: CommandFormProps) => {
   const [run, setRun] = useState(command?.run || '');
   const [description, setDescription] = useState(command?.description || '');
 
-  console.log(command)
-
   const handleSubmit = () => {
     if(!name || !run) {
       return;

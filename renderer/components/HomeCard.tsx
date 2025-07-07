@@ -38,7 +38,7 @@ const HomeCard = ({ scope, openToEdit }: HomeCardProps) => {
 
   return (
     <div
-      className='w-[300px] h-[150px] rounded-md bg-white p-4 shadow-lg cursor-pointer hover:scale-105 transition-all ease-in-out duration-300 flex flex-col relative'
+      className='w-[300px] h-[150px] rounded-md bg-white p-4 shadow-lg cursor-pointer hover:scale-105 transition-all ease-in-out duration-300 relative'
       onClick={handleClick}
     >
       <MdModeEdit
@@ -50,13 +50,13 @@ const HomeCard = ({ scope, openToEdit }: HomeCardProps) => {
         className="font-bold text-lg"
       >{scope.name}</h2>
       <p
-        className='text-sm truncate'
+        className='text-sm'
       >
         {scope.description || 'Sem descrição'}
       </p>
 
       <p
-        className='text-xs font-bold self-end mt-11'
+        className='text-xs font-bold absolute bottom-3 right-3'
       >
         Processos ativos: {getCommandsRunning()}
       </p>

@@ -7,13 +7,20 @@ import {
   AiOutlineArrowLeft,
   AiOutlinePlus
 } from "react-icons/ai";
+import { TbPlaylistX, TbReload, TbTerminal2  } from "react-icons/tb";
 import CommandItemList from '../components/CommandItemList';
 import Modal from '../components/Modal';
 import CommandForm from '../components/CommandForm';
+import { FaUnlock, FaLock  } from "react-icons/fa";
 
 const DetailsPage = () => {
   const router = useRouter()
-  const { scopeSelected, setScopeSelected } = useAppContext();
+  const {
+    scopeSelected,
+    setScopeSelected,
+    openInTerminal,
+    cleanOutput
+  } = useAppContext();
 
   const [commandSelected, setCommandSelected] = useState<CommandInterface>();
   const [autoScroll, setAutoScroll] = useState(true);
@@ -92,20 +99,72 @@ const DetailsPage = () => {
         </Rnd>
 
         <div
-          className="max-h-100 overflow-y-auto
-          [&::-webkit-scrollbar]:w-2
-          [&::-webkit-scrollbar]:p-0.5
-          [&::-webkit-scrollbar-track]:opacity-0
-          [&::-webkit-scrollbar-thumb]:bg-gray-300
-          [&::-webkit-scrollbar-thumb]:rounded-md
-          bg-gray-950 w-full h-full max-h-[80vh] overflow-auto relative rounded-lg text-white p-4
-          "
+          className="max-h-100 bg-gray-950 w-full h-full relative rounded-lg text-white"
         >
-          <pre
-            className="text-wrap"
+          <div
+            className='px-4 py-3 h-14 border-b text-sm w-full flex justify-between items-center'
           >
-            {commandSelected?.output || ""}
-          </pre>
+            <p
+              className="text-wrap"
+            >
+              {commandSelected?.description || 'Sem descrição'}
+            </p>
+            <div
+              className="flex items-center gap-2"
+            >
+              {autoScroll
+                ? <FaLock
+                  size={20}
+                  title="Desligar Auto Scroll"
+                  onClick={() => setAutoScroll(false)}
+                  className="cursor-pointer hover:scale-105 transition-all ease-out duration-200
+                  hover:text-[green]"
+                />
+                : <FaUnlock
+                  size={20}
+                  title="Ligar Auto Scroll"
+                  onClick={() => setAutoScroll(true)}
+                  className="cursor-pointer hover:scale-105 transition-all ease-out duration-200
+                  hover:text-[green]"
+                />
+              }
+              {commandSelected?.isRunning && <TbReload
+                size={22}
+                title="Reiniciar Comando"
+                className="cursor-pointer hover:scale-105 transition-all ease-out duration-200
+                hover:text-blue-300"
+              />}
+              <TbPlaylistX
+                size={28}
+                title="Limpar Saida"
+                onClick={() => cleanOutput(commandSelected)}
+                className="cursor-pointer hover:scale-105 transition-all ease-out duration-200
+                hover:text-[red]"
+              />
+              <TbTerminal2
+                size={22}
+                title="Abrir no terminal"
+                onClick={openInTerminal}
+                className="cursor-pointer hover:scale-105 transition-all ease-out duration-200
+                hover:text-[yellow]"
+              />
+            </div>
+          </div>
+          <div
+            className="text-wrap overflow-y-auto max-w-full
+              [&::-webkit-scrollbar]:w-2
+              [&::-webkit-scrollbar]:p-0.5
+              [&::-webkit-scrollbar-track]:opacity-0
+              [&::-webkit-scrollbar-thumb]:bg-gray-300
+              [&::-webkit-scrollbar-thumb]:rounded-md
+              w-full h-[calc(100%-64px)] relative rounded-lg p-4"
+          >
+            <pre
+              className="text-wrap"
+            >
+              {commandSelected?.output || ""}
+            </pre>
+          </div>
         </div>
       </div>
 
