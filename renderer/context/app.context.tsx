@@ -2,6 +2,7 @@ import { createContext, useContext, useState, ReactNode, useEffect } from 'react
 import { ScopeInterface } from '../@types/scope';
 import { CommandInterface } from '../@types/command';
 import * as _ from 'lodash';
+import { delay } from '../utils/delay';
 
 type AppContextType = {
   scopeSelected: ScopeInterface | undefined;
@@ -40,6 +41,8 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     }
 
     command.output = command.output === '' ? result : command.output + result;
+    !command.isRunning
+      && updateIsRunning(scopeSelected?.id, command.id_command, true);
     setScopeList([...scopeList]);
   },[updateOutData]);
 
@@ -59,7 +62,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
       setUpdateIsRunningObj(JSON.parse(msg));
     });
 
-    window.api.resetAllHandles();
+    window.api.killAllHandles();
 
     const getData = async () => {
       if(scopeList !== undefined) {
@@ -156,6 +159,31 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     setScopeList([...scopeList]);
   }
 
+  const restartProcess = async (command: CommandInterface) => {
+    window.api.pararComandoWatch(JSON.stringify({
+      id_scope: scopeSelected?.id,
+      id_command: command.id_command
+    }));
+
+    await delay(1000);
+
+    const data = {
+      id_scope: scopeSelected?.id,
+      id_command: command.id_command,
+      command: command.run,
+      directory: scopeSelected?.directory
+    }
+
+    window.api.iniciarComandoWatch(JSON.stringify({
+      id_scope: scopeSelected?.id,
+      id_command: command.id_command,
+      command: command.run,
+      directory: scopeSelected?.directory
+    }));
+
+    updateIsRunning(scopeSelected?.id, command.id_command, true);
+  }
+
 
   const contextValue = {
     scopeSelected,
@@ -170,6 +198,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     removeCommand,
     openInTerminal,
     cleanOutput,
+    restartProcess
   }
 
 

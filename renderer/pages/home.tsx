@@ -13,7 +13,7 @@ export default function HomePage() {
 
   return (
     <div
-      className='bg-white/95 min-h-screen flex flex-col text-gray-600'
+      className='min-h-screen flex flex-col text-gray-600'
     >
       <h1 className='text-3xl font-bold  mt-10 text-center'>Terminal Handler</h1>
 

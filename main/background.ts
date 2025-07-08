@@ -7,6 +7,14 @@ import { CommandBackground } from '../renderer/@types/command-background'
 import fs from 'fs';
 
 const isProd = process.env.NODE_ENV === 'production'
+const hadles: CommandBackground[] = [];
+
+const killHandles = () => {
+  hadles.forEach(item => {
+    console.log('Finalizando processo', item.handdle.pid);
+    exec(`taskkill /pid ${item.handdle.pid} /T /F`);
+  });
+}
 
 if (isProd) {
   serve({ directory: 'app' })
@@ -32,6 +40,10 @@ if (isProd) {
     await mainWindow.loadURL(`http://localhost:${port}/home`)
     mainWindow.webContents.openDevTools()
   }
+
+  mainWindow.on('closed', () => {
+    killHandles();
+  })
 })()
 
 app.on('window-all-closed', () => {
@@ -41,8 +53,6 @@ app.on('window-all-closed', () => {
 ipcMain.on('message', async (event, arg) => {
   event.reply('message', `${arg} World!`)
 })
-
-const hadles: CommandBackground[] = [];
 
 ipcMain.on('comando-watch-iniciar', (event, json: string) => {
   const data = JSON.parse(json);
@@ -109,15 +119,17 @@ ipcMain.on('comando-watch-parar', (event, json) => {
     item => item.id_scope === +id_scope && item.id_command === +id_command
   );
 
+  if (!handle) {
+    return;
+  }
+
   if (handle.handdle && handle.handdle.pid) {
     exec(`taskkill /pid ${handle.handdle.pid} /T /F`);
   }
 });
 
-ipcMain.on('reset-all-handles', () => {
-  hadles.forEach(item => {
-    item.handdle.kill();
-  });
+ipcMain.on('kill-all-handles', () => {
+  killHandles();
 });
 
 ipcMain.handle('selecionar-pasta', async () => {
@@ -143,7 +155,7 @@ ipcMain.handle('get-data', () => {
   return fs.readFileSync(dataPath, 'utf-8');
 });
 
-ipcMain.on('open-in-termial', (event, directory) => {
+ipcMain.on('open-in-terminal', (event, directory) => {
   let disk = directory.substr(1,1)
 
   spawn(`${disk}: && cd ${directory} && start cmd`, [], {

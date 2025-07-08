@@ -38,11 +38,14 @@ Caso tenho alguma sugestão pode me informar também
 9. Salva as saidas dos comandos separadamente
 10. Executa comandos continuos e exibe as saidas em tempo real
 11. Informações salvas localmento no computador (appdata)
+12. Limpar saida
+13. Reiniciar Processo
+14. Abrir Escopo no terminal
+15. AutoScroll
+16. Copiar saida
 
 ### Funções que serão implementadas:
 1. Adicionar função de incluir argumentos personalizados nos comandos
-2. Limpar saida
-3. Reiniciar processo
 
 - OBS: Moks removidos!
 - Path dos dados: `C:\Users\{user}\AppData\Roaming\TermialHandler`

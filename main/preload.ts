@@ -22,7 +22,7 @@ const rendererApi = {
   pararComandoWatch: (json) => ipcRenderer.send('comando-watch-parar', json),
   onSaida: (callback) => ipcRenderer.on('comando-watch-saida', (_, data) => callback(data)),
   onFim: (callback) => ipcRenderer.on('comando-watch-fim', (_, data) => callback(data)),
-  resetAllHandles: () => ipcRenderer.send('reset-all-handles'),
+  killAllHandles: () => ipcRenderer.send('kill-all-handles'),
   selecionarPasta: () => ipcRenderer.invoke('selecionar-pasta'),
   saveData: (data) => ipcRenderer.send('save-data', data),
   getData: () => ipcRenderer.invoke('get-data'),

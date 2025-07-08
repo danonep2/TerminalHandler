@@ -1,13 +1,20 @@
+'use client'
+
 import { useRouter } from 'next/router';
 import { useAppContext } from '../context/app.context';
 import { Rnd } from 'react-rnd';
 import { CommandInterface } from '../@types/command';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   AiOutlineArrowLeft,
   AiOutlinePlus
 } from "react-icons/ai";
-import { TbPlaylistX, TbReload, TbTerminal2  } from "react-icons/tb";
+import {
+  TbPlaylistX,
+  TbReload,
+  TbTerminal2,
+  TbCopy
+} from "react-icons/tb";
 import CommandItemList from '../components/CommandItemList';
 import Modal from '../components/Modal';
 import CommandForm from '../components/CommandForm';
@@ -17,15 +24,35 @@ const DetailsPage = () => {
   const router = useRouter()
   const {
     scopeSelected,
+    scopeList,
     setScopeSelected,
     openInTerminal,
-    cleanOutput
+    cleanOutput,
+    restartProcess
   } = useAppContext();
 
   const [commandSelected, setCommandSelected] = useState<CommandInterface>();
   const [autoScroll, setAutoScroll] = useState(true);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [commandToEdit, setCommandToEdit] = useState<CommandInterface>();
+
+  const outRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if(!scopeSelected){
+      back();
+    }
+  }, []);
+
+  useEffect(() => {
+    if(!autoScroll){
+      return;
+    }
+
+    outRef.current?.scrollTo({
+      top: outRef.current?.scrollHeight,
+    });
+  },[ scopeList, autoScroll]);
 
   const back = () => {
     setScopeSelected(undefined);
@@ -37,9 +64,17 @@ const DetailsPage = () => {
     setModalIsOpen(true);
   }
 
+  const copyOutut = (command: CommandInterface) => {
+    navigator.clipboard.writeText(command.output);
+  }
+
+  if(!scopeSelected) {
+    return null;
+  }
+
   return (
     <div
-      className='bg-white/95 min-h-screen text-gray-600 p-5 h-full'
+      className='min-h-screen text-gray-600 p-5 h-full'
     >
       <div
         className="flex items-center cursor-pointer "
@@ -112,6 +147,13 @@ const DetailsPage = () => {
             <div
               className="flex items-center gap-2"
             >
+              <TbCopy
+                size={22}
+                title="Copiar Saida"
+                onClick={() => copyOutut(commandSelected)}
+                className="cursor-pointer hover:scale-105 transition-all ease-out duration-200
+                hover:text-blue-300"
+              />
               {autoScroll
                 ? <FaLock
                   size={20}
@@ -131,6 +173,7 @@ const DetailsPage = () => {
               {commandSelected?.isRunning && <TbReload
                 size={22}
                 title="Reiniciar Comando"
+                onClick={() => restartProcess(commandSelected)}
                 className="cursor-pointer hover:scale-105 transition-all ease-out duration-200
                 hover:text-blue-300"
               />}
@@ -158,6 +201,7 @@ const DetailsPage = () => {
               [&::-webkit-scrollbar-thumb]:bg-gray-300
               [&::-webkit-scrollbar-thumb]:rounded-md
               w-full h-[calc(100%-64px)] relative rounded-lg p-4"
+              ref={outRef}
           >
             <pre
               className="text-wrap"
