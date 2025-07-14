@@ -6,6 +6,9 @@
   <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" />
   <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" />
 </div>
+<div align="center">
+  <img src="./renderer/public/images/logo.png">
+</div>
 
 
 # Índices 🗂
@@ -43,6 +46,8 @@ Caso tenho alguma sugestão pode me informar também
 14. Abrir Escopo no terminal
 15. AutoScroll
 16. Copiar saida
+17. Dark mode
+18. Parar Todos os comandos
 
 ### Funções que serão implementadas:
 1. Adicionar função de incluir argumentos personalizados nos comandos
