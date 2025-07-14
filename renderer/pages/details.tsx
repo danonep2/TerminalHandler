@@ -45,14 +45,14 @@ const DetailsPage = () => {
   }, []);
 
   useEffect(() => {
-    if(!autoScroll){
+    if(!autoScroll && commandSelected.isRunning){
       return;
     }
 
     outRef.current?.scrollTo({
       top: outRef.current?.scrollHeight,
     });
-  },[ scopeList, autoScroll]);
+  },[ scopeList, autoScroll, commandSelected]);
 
   const back = () => {
     setScopeSelected(undefined);
@@ -77,7 +77,7 @@ const DetailsPage = () => {
       className='min-h-screen text-gray-600 p-5 h-full'
     >
       <div
-        className="flex items-center cursor-pointer "
+        className="flex items-center cursor-pointer dark:text-white"
         onClick={back}
       >
         <AiOutlineArrowLeft
@@ -87,8 +87,8 @@ const DetailsPage = () => {
         Voltar
       </div>
 
-      <h1 className='text-3xl font-bold mt-2'>Escopo: {scopeSelected?.name}</h1>
-      <p className='text-sm'>{scopeSelected?.description}</p>
+      <h1 className='text-3xl font-bold mt-2 dark:text-white'>Escopo: {scopeSelected?.name}</h1>
+      <p className='text-sm dark:text-white'>{scopeSelected?.description}</p>
 
       <div className="flex mt-3 w-full h-[80vh] gap-2">
         <Rnd
@@ -104,12 +104,12 @@ const DetailsPage = () => {
             right: true,
           }}
           minWidth={200}
-          className="bg-white w-full h-full border border-gray-500 rounded-lg"
+          className="w-full h-full pb-1 border border-gray-500 rounded-lg bg-white dark:bg-opacity-0"
         >
-          <div className="w-full h-full p-4 relative flex flex-col gap-3">
-            <div className="flex flex-wrap justify-between mb-3">
+          <div className="w-full h-full relative flex flex-col pr-1">
+            <div className="flex flex-wrap justify-between p-4">
               <h1
-                className='text-2xl font-bold mb-2'
+                className='text-2xl font-bold mb-2 dark:text-white mr-4'
               >Comandos cadastrados</h1>
               <button
                 className='btn-blue flex items-center gap-2 w-100'
@@ -120,16 +120,27 @@ const DetailsPage = () => {
               </button>
             </div>
 
-            {scopeSelected?.commands?.map((command) => (
-              <CommandItemList
-                key={command.id_command}
-                editCommand={openToEdit}
-                command={command}
-                selectCommand={() => setCommandSelected(command)}
-                isSelected={command.id_command === commandSelected?.id_command}
-              />
-            ))}
-
+            <div
+              className="
+              h-full overflow-y-scroll
+              flex-col flex gap-2
+              [&::-webkit-scrollbar]:w-2
+              [&::-webkit-scrollbar]:p-0.5
+              [&::-webkit-scrollbar-track]:opacity-0
+              [&::-webkit-scrollbar-thumb]:bg-gray-300
+              [&::-webkit-scrollbar-thumb]:rounded-md px-2 pb-5
+              "
+            >
+              {scopeSelected?.commands?.map((command) => (
+                <CommandItemList
+                  key={command.id_command}
+                  editCommand={openToEdit}
+                  command={command}
+                  selectCommand={() => setCommandSelected(command)}
+                  isSelected={command.id_command === commandSelected?.id_command}
+                />
+              ))}
+            </div>
           </div>
         </Rnd>
 

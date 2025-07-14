@@ -2,7 +2,8 @@ import { useRouter } from 'next/router';
 import { useAppContext } from '../context/app.context';
 import { ScopeInterface } from '../@types/scope';
 import { MdModeEdit } from "react-icons/md";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { delay } from '../utils/delay';
 
 interface HomeCardProps {
   scope: ScopeInterface;
@@ -13,12 +14,21 @@ const HomeCard = ({ scope, openToEdit }: HomeCardProps) => {
   const router = useRouter();
   const { setScopeSelected } = useAppContext();
 
-  const [scopeToEdit, setScopeToEdit] = useState<ScopeInterface>();
+  const [effect, setEffect] = useState(false);
 
   const handleClick = () => {
     setScopeSelected(scope);
     router.push('/details')
   }
+
+  useEffect(() => {
+    const startEffect = async () => {
+      await delay(100);
+      setEffect(true);
+    }
+
+    startEffect();
+  }, []);
 
   const getCommandsRunning = () => {
     const { commands } = scope;
@@ -38,7 +48,9 @@ const HomeCard = ({ scope, openToEdit }: HomeCardProps) => {
 
   return (
     <div
-      className='w-[300px] h-[150px] rounded-md bg-white p-4 shadow-lg cursor-pointer hover:scale-105 transition-all ease-in-out duration-300 relative'
+      className={`w-[300px] h-[150px] rounded-md bg-[#f1f2f1] p-4 shadow-lg cursor-pointer hover:scale-105 transition-all ease-in-out duration-300 relative
+        ${effect ? 'translate-y-0 opacity-100' : 'translate-y-1 opacity-0'}
+        `}
       onClick={handleClick}
     >
       <MdModeEdit
